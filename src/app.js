@@ -5,33 +5,44 @@ const app = express();
 
 
 
-app.get("/user/:userId/:name/:place",(req,res)=>{
-
-  console.log(req.params);
-
-  res.send({firstName:"akki",lastName:"jyothi"})
-})
-
-app.post("/user",(req,res)=>{
-
-  console.log('save data to databasse');
-
-  res.send('data sucesfully saved')
-})
-
-app.delete("/user",(req,res)=>{
-
-  res.send('delete sucesfully')
-})
+//route handler
 
 
-app.use("/test", (req, res) => {
-  res.send("hello from node revison");
-});
+app.use('/user',[(req,res,next)=>{
+
+  console.log('iam first');
+  next()
+},
+
+(req,res,next)=>{
+
+  console.log('second');
+  next()
+}],
+(req,res,next)=>{
+
+  console.log('3rd');
+
+  next()
+},
+
+(req,res,next)=>{
+
+  console.log('4th rsponse');
+
+  next()
+},
+
+(req,res,next)=>{
+
+  console.log('5 th response');
+  res.send('iam 5 the one😌')
+
+}
 
 
 
-
+)
 
 app.listen(3000, () => {
   console.log("server is running");
