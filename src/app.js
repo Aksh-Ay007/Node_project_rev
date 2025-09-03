@@ -5,7 +5,9 @@ const app = express();
 
 
 
-app.get("/user",(req,res)=>{
+app.get("/user/:userId/:name/:place",(req,res)=>{
+
+  console.log(req.params);
 
   res.send({firstName:"akki",lastName:"jyothi"})
 })
