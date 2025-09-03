@@ -1,38 +1,39 @@
 const express = require("express");
-const {adminAuth, userAuth}=require('./middleware/auth.js')
 
 const app = express();
 
-//middleware
 
-app.use("/admin", adminAuth);
 
-//route handler
 
-app.get("/admin/allData", (req, res) => {
-  res.send("all the data");
-});
 
-app.delete('/admin/delete',(req,res)=>{
 
-  res.send('delete successfully!')
+app.get('/user',(req,res)=>{
+
+try {
+    throw new Error("fdsjnds");
+
+    res.send("hai user welcome backk");
+} catch (error) {
+
+  res.status(402).send('got an eroor try catch cathc the error')
+
+}
 })
 
 
-app.get('/user',userAuth,(req,res)=>{
+//error handler
 
-  res.send('hai user welcome backk')
-})
+// app.use('/',(err,req,res,next)=>{
 
 
-app.delete("/user/delete",userAuth, (req, res) => {
-  res.send("hey user delete successfully");
-});
+//   if(err){
+//     res.status(402).send("one error foud");
+//   }
+//   else{
+//     next()
+//   }
+// })
 
-app.post('/user/login',(req,res)=>{
-
-  res.send('u r login successfully')
-})
 
 app.listen(3000, () => {
   console.log("server is running");
