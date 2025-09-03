@@ -1,24 +1,11 @@
 const express = require("express");
+const {adminAuth, userAuth}=require('./middleware/auth.js')
 
 const app = express();
 
 //middleware
 
-app.use('/admin',(req,res,next)=>{
-
-  console.log('admin auth checking middleware active');
-
-  const token='abcs'
-
-  const isAdmin=token==='abc'
-
-  if (!isAdmin) {
-    res.status(401).send("you are not authorized");
-  }
-else{
-  next()
-}
-})
+app.use("/admin", adminAuth);
 
 //route handler
 
@@ -29,6 +16,22 @@ app.get("/admin/allData", (req, res) => {
 app.delete('/admin/delete',(req,res)=>{
 
   res.send('delete successfully!')
+})
+
+
+app.get('/user',userAuth,(req,res)=>{
+
+  res.send('hai user welcome backk')
+})
+
+
+app.delete("/user/delete",userAuth, (req, res) => {
+  res.send("hey user delete successfully");
+});
+
+app.post('/user/login',(req,res)=>{
+
+  res.send('u r login successfully')
 })
 
 app.listen(3000, () => {
