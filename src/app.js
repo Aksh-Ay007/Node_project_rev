@@ -17,6 +17,11 @@ app.post("/user",(req,res)=>{
   res.send('data sucesfully saved')
 })
 
+app.delete("/user",(req,res)=>{
+
+  res.send('delete sucesfully')
+})
+
 
 app.use("/test", (req, res) => {
   res.send("hello from node revison");
