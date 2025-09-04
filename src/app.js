@@ -71,12 +71,35 @@ app.get("/feed", async (req, res) => {
 //     res.status(401).send("something went wrong!");
 //   }
 // });
-app.patch("/update", async (req, res) => {
-  const userId = req.body.userId;
+app.patch("/update/:userId", async (req, res) => {
+  const userId = req.params?.userId;
+  console.log(userId);
   const data = req.body;
 
   try {
-    const user = await User.findByIdAndUpdate({ _id: userId }, data,{returnDocument:"after",runValidators:true});
+
+
+    const Allowed_Updates = ["age", "about", "skills", "photoUrl"];
+
+    const isAllowed_Updates = Object.keys(data).every((k) =>
+      Allowed_Updates.includes(k)
+    );
+
+    if (!isAllowed_Updates) {
+      throw new Error("bro update is not allowed for this field!..");
+    }
+
+    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+      returnDocument: "after",
+      runValidators: true,
+    });
+
+    if(!user){
+
+      throw new Error("user is not here");
+      
+    }
+
 
     res.send(user, "update succefully!");
   } catch (error) {
