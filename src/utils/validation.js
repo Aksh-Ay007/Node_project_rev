@@ -24,6 +24,7 @@ const validateProfileEdit = (req) => {
     "skills",
     "about",
     "photoUrl",
+    
   ];
 
   const isAllowed = Object.keys(user).every((k) =>
