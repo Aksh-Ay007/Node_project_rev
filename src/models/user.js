@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
-const validator=require('validator')
+const validator = require("validator");
 const bcrypt = require("bcrypt");
- 
+
 var jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
@@ -20,25 +20,20 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      validate(value){
-
-        if(!validator.isEmail(value)){
-
-          throw new Error("this email is not validate please check"+value);
-
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("this email is not validate please check" + value);
         }
-      }
+      },
     },
 
     password: {
       type: String,
-      validate(value){
-
-        if(!validator.isStrongPassword(value)){
+      validate(value) {
+        if (!validator.isStrongPassword(value)) {
           throw new Error("'hello pass word strong alla keto");
-
         }
-      }
+      },
     },
 
     age: {
@@ -71,13 +66,11 @@ const userSchema = new mongoose.Schema(
       default:
         "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
 
-        validate(value){
-
-          if(!validator.isURL(value)){
-            throw new Error("invalid photo url"+value);
-
-          }
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("invalid photo url" + value);
         }
+      },
     },
   },
 
@@ -88,17 +81,14 @@ const userSchema = new mongoose.Schema(
 
 // module.exports = User;
 
+userSchema.methods.getJWT = async function () {
+  const user = this;
+  const token = await jwt.sign({ _id: user._id }, "nodeRev@777!", {
+    expiresIn: "1d",
+  });
 
-userSchema.methods.getJWT=async function(){
-
-  const user=this
-  const token=await jwt.sign({ _id: user._id }, "nodeRev@777!", {
-          expiresIn: "1d",
-        });
-
-        return token
-}
-
+  return token;
+};
 
 userSchema.methods.validatePassword = async function (UserPasswordInput) {
   const user = this;
