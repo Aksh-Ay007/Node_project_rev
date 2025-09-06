@@ -1,7 +1,11 @@
 const express = require("express");
 const { userAuth } = require("../middleware/auth");
-const { validateProfileEdit } = require("../utils/validation");
+const {
+  validateProfileEdit,
+  validatePassword,
+} = require("../utils/validation");
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 const profileRouter = express.Router();
 
@@ -26,11 +30,37 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     await loginUser.save();
 
     res.json({
-      message: `${loginUser.firstName} your profile is updated succefully...!`,
-      data:loginUser
+      message: `Hey ${user.firstName}, your password has been updated successfully.`,
     });
   } catch (error) {
     res.status(402).send("something went wrong! " + error.message);
+  }
+});
+
+profileRouter.patch("/profile/forgotPassword", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+
+    const { newPassword } = req.body;
+
+    validatePassword(req);
+
+    if (!newPassword) {
+      throw new Error("new password is required");
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({
+      message: `hey ${user.firstName} your password is updated and your new password is :`,
+      data: newPassword,
+    });
+
+    console.log(password);
+  } catch (error) {
+    res.send("something went wrong " + error.message);
   }
 });
 

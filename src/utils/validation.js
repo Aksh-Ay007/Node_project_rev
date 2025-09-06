@@ -16,9 +16,8 @@ const validateSignupData = (req) => {
   }
 };
 
-const validateProfileEdit=(req)=>{
-
-const user=req.body
+const validateProfileEdit = (req) => {
+  const user = req.body;
   const allowedEditFiled = [
     "firstName",
     "lastName",
@@ -27,12 +26,19 @@ const user=req.body
     "photoUrl",
   ];
 
+  const isAllowed = Object.keys(user).every((k) =>
+    allowedEditFiled.includes(k)
+  );
 
-  const isAllowed=Object.keys(user).every((k)=>allowedEditFiled.includes(k))
+  return isAllowed;
+};
 
+const validatePassword = (req) => {
+  const { newPassword } = req.body;
 
-  return isAllowed
+  if (!validator.isStrongPassword(newPassword)) {
+    throw new Error("password should be strong..!");
+  }
+};
 
-}
-
-module.exports = { validateSignupData, validateProfileEdit };
+module.exports = { validateSignupData, validateProfileEdit, validatePassword };
