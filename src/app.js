@@ -22,7 +22,6 @@ app.post("/signup", async (req, res) => {
     //hashpassword
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
 
     const user = new User({
       firstName,
@@ -53,7 +52,6 @@ app.post("/login", async (req, res) => {
 
     if (isPasswordValid) {
       let token = await user.getJWT();
-      console.log(token);
       res.cookie("token", token, {
         expires: new Date(Date.now() + 1 * 3600000),
       });
