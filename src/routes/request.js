@@ -11,6 +11,7 @@ requestRouter.post(
   async (req, res) => {
     try {
       const senderUserId = req.user._id;
+      const{firstName}=req.user
       const receiverUserId = req.params.receiverUserId;
       const status = req.params.status;
 
@@ -48,7 +49,7 @@ requestRouter.post(
 
       const data = await connectionRequest.save();
 
-      res.json({ message: "connection req send succefully", data });
+      res.json({message:`${firstName} is ${status} ${toReciever.firstName}`, data });
     } catch (error) {
       res.status(402).send("something went wrong! " + error.message);
     }
