@@ -5,11 +5,13 @@ const connectionRequestSchema = new mongoose.Schema(
   {
     senderUserId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref:"User",
       required: true,
     },
 
     receiverUserId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref:"User",
       required: true,
     },
 
@@ -25,7 +27,7 @@ const connectionRequestSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-connectionRequestSchema.index({senderUserId:1,receiverUserId:1})
+connectionRequestSchema.index({ senderUserId: 1, receiverUserId: 1 });
 
 connectionRequestSchema.pre("save", function (next) {
   const connectionRequest = this;
