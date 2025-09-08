@@ -1,11 +1,11 @@
 const express = require("express");
 const { userAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
-const User=require('../models/user')
+const User = require("../models/user");
 
 const userRouter = express.Router();
 
-const userData=['firstName','lastName','about','skills','photoUrl']
+const userData = ["firstName", "lastName", "about", "skills", "photoUrl"];
 
 userRouter.get("/user/request/received", userAuth, async (req, res) => {
   try {
@@ -76,6 +76,12 @@ userRouter.get("/feed", userAuth, async (req, res) => {
   try {
     const loginUser = req.user;
 
+    const page=parseInt(req.query.page)||1
+    let limit=parseInt(req.query.limit)||10
+    const skip=(page-1)*limit
+
+    limit=limit>50?50:limit
+
     const connectionRequest = await ConnectionRequest.find({
       $or: [{ senderUserId: loginUser._id }, { receiverUserId: loginUser._id }],
     }).select("senderUserId receiverUserId");
@@ -92,9 +98,9 @@ userRouter.get("/feed", userAuth, async (req, res) => {
         { _id: { $nin: Array.from(hideUsers) } },
         { _id: { $ne: loginUser._id } },
       ],
-    }).select(userData);
+    }).select(userData).skip(skip).limit(limit)
 
-    res.json({message:"please find the feed users",users})
+    res.json({ message: "please find the feed users", users });
   } catch (error) {
     res.status(400).send("something went wrong..!", error.message);
   }
